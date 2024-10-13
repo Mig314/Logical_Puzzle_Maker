@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Logical Puzzle Maker</title>
+  </head>
+  <body>
+    <script src="js/scripts.js"></script>
+    <center>
+      <form name="form">
+        <textarea disabled name="text" rows="20" cols="60" style="font-size:20px;">
+《使い方》
+・登場人物と属性の数を設定します。
+・「問題」ボタンを押すと論理パズルをランダムに生成します。
+・「解答」ボタンを押すと問題文の下に解答を表示します。
+        </textarea><br>
+        登場人物の数(<label><input type="radio" name="radio_people" value="3" checked>3</label>
+        <label><input type="radio" name="radio_people" value="4">4</label>
+        <label><input type="radio" name="radio_people" value="5">5</label>
+        <label><input type="radio" name="radio_people" value="6">6</label>
+        <label><input type="radio" name="radio_people" value="7">7</label>)
+        　属性の数(<label><input type="radio" name="radio_variety" value="2" checked>2</label>
+        <label><input type="radio" name="radio_variety" value="3">3</label>
+        <label><input type="radio" name="radio_variety" value="4">4</label>
+        <label><input type="radio" name="radio_variety" value="5">5</label>)
+        　
+        <button type="button" onclick="make_puzzle()"><font size="4">問題</font></button>
+        <button type="button" onclick="make_answer()"><font size="4">解答</font></button>
+      </form>
+    </center>
+  </body>
+</html>

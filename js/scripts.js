@@ -16,9 +16,9 @@ let answer=[];
 
 //make_puzzle()は問題を生成する関数です。
 function make_puzzle(){
-    const start=performance.now();
-    num_people=document.querySelector(`form`).radio_people.value;
-    num_variety=document.querySelector(`form`).radio_variety.value;
+    let start=performance.now();
+    num_people=Number(document.querySelector(`form`).radio_people.value);
+    num_variety=Number(document.querySelector(`form`).radio_variety.value);
     num_matrix=num_variety*(num_variety-1)/2;
     //hint[表][人数][人数]はパズルのヒント(〇は1，×は-1)を表します。
     //assump[表][人数][人数]は解を数えるときに仮定する解(〇は1，×は-1)を表します。
@@ -43,11 +43,11 @@ function make_puzzle(){
         }
     }
     //登場人物を行に持つ表で〇にする部分をランダムで決めて、そのanswerを1にします。
+    let num=[];
+    for(let j=0;j<num_people;j+=1){
+        num[j]=j;
+    }
     for(let i=0;i<num_variety-1;i+=1){
-        let num=[];
-        for(let j=0;j<num_people;j+=1){
-            num[j]=j;
-        }
         let list=permutation(num,num_people)[Math.floor(Math.random()*permutation(num,num_people).length)];
         for(let j=0;j<num_people;j+=1){
             answer[i][j][list[j]]=1;
@@ -80,13 +80,18 @@ function make_puzzle(){
     //cnt_flagは1であるflagの数，cnt_answerは現在のhintでの解の数，memoはhint[t1][t2][t3]が削れない場合に戻すための記録を表します。
     //高速化のために、はじめに確実に削ることができるhintを削ります。
     for(let i=0;i<num_matrix;i+=1){
+        let t2=Math.floor(Math.random()*num_people);
         for(let j=0;j<num_people;j+=1){
-            let t3=Math.floor(Math.random()*num_people);
-            hint[i][j][t3]=0;
-            flag[i][j][t3]=1;
+            let list=permutation(num,2)[Math.floor(Math.random()*permutation(num,2).length)];
+            hint[i][j][list[0]]=0;
+            flag[i][j][list[0]]=1;
+            if(j===t2){
+                hint[i][j][list[1]]=0;
+                flag[i][j][list[1]]=1;
+            }
         }
     }
-    let cnt_flag=num_matrix*num_people;
+    let cnt_flag=num_matrix*(num_people+1);
     while(cnt_flag<num_matrix*num_people**2){
         let t1=Math.floor(Math.random()*num_matrix);
         let t2=Math.floor(Math.random()*num_people);
@@ -97,10 +102,6 @@ function make_puzzle(){
             hint[t1][t2][t3]=0;
             flag[t1][t2][t3]=1;
             cnt_flag+=1;
-            let num=[];
-            for(let j=0;j<num_people;j+=1){
-                num[j]=j;
-            }
             for(let list of power(permutation(num,num_people),num_variety-1)){
                 for(let i=0;i<num_matrix;i+=1){
                     for(let j=0;j<num_people;j+=1){
@@ -144,6 +145,7 @@ function make_puzzle(){
             if(cnt_answer>1){
                 hint[t1][t2][t3]=memo;
             }
+            console.log(`${cnt_flag}/${num_matrix*num_people**2}完了　ここまで${(performance.now()-start)/1000}秒`);
         }
     }
     //問題文の最初に設定の文章を作ります。
@@ -211,15 +213,6 @@ function make_puzzle(){
     }
     document.form.text.value=message;
     state=1;
-    const end=performance.now();
-    let time=Math.floor((end-start)/1000);
-    if(time<60){
-        console.log(`${num_people}人で${num_variety}属性の問題生成に${time}秒かかりました。`);
-    }else if(time<60*60){
-        console.log(`${num_people}人で${num_variety}属性の問題生成に${time/60}分かかりました。`);
-    }else{
-        console.log(`${num_people}人で${num_variety}属性の問題生成に${time/60/60}時間かかりました。`);
-    } 
 }
 
 //make_answer()は解答を生成する関数です。
